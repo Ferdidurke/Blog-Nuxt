@@ -4,28 +4,28 @@
       <div>
         Sort by author
         <md-button class="md-raised" v-on:click="sortByAuthorDesc">
-          <arrow-down mdi/>
+          <arrow-down mdi class="icon-button"/>
         </md-button>
         <md-button class="md-raised" v-on:click="sortByAuthorAsc">
-          <arrow-up mdi/>
+          <arrow-up mdi class="icon-button"/>
         </md-button>
       </div>
       <div>
         Sort by date
         <md-button class="md-raised" v-on:click="sortByDateDesc">
-          <arrow-down mdi/>
+          <arrow-down mdi class="icon-button"/>
         </md-button>
         <md-button class="md-raised" v-on:click="sortByDateAsc">
-          <arrow-up mdi/>
+          <arrow-up mdi class="icon-button"/>
         </md-button>
       </div>
       <div>
         <md-button class="md-raised" v-on:click="previousPage" :disabled="isDisabledPrevPage">
-          <arrow-left mdi/>
+          <arrow-left mdi class="icon-button"/>
         </md-button>
           <div class="page-counter-container"></div>
         <md-button class="md-raised" v-on:click="nextPage" :disabled="isDisabledNextPage">
-          <arrow-right mdi/>
+          <arrow-right mdi class="icon-button"/>
         </md-button>
       </div>
     </div>
@@ -136,6 +136,9 @@ export default {
     justify-content: center;
     color: #eeeeee;
     font-size: 20px;
+  }
+  .icon-button {
+    font-size: 24px;
   }
 
 

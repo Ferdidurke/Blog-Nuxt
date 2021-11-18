@@ -8,7 +8,7 @@
               {{ post.title }}
             </div>
             <div class="delete-button-container">
-              <md-button class="md-icon-button"><delete mdi/></md-button>
+              <md-button class="md-icon-button"><delete mdi class="post-icon"/></md-button>
             </div>
           </div>
 
@@ -20,7 +20,7 @@
         </md-card-content>
 
         <div class="accordion-opener" v-on:click="openCommentBlock">
-            <chevron-double-down class="new-icon"/>
+            <chevron-double-down class="post-icon"/>
         </div>
       <div class="comments-block" :class="{extended: isExtendedCommentsBlock}">
         <CommentsContainer v-if="isExtendedCommentsBlock"
@@ -90,6 +90,10 @@ export default {
     width: 8%;
   }
 
+  .post-icon {
+    font-size: 24px;
+  }
+
   .md-icon-button {
     margin-top: 0;
     padding: 0;
@@ -97,6 +101,9 @@ export default {
 
   .accordion-opener {
     height: 40px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
     border-top: 1px solid;
     border-bottom: 3px #eeeeee solid;
     border-radius: 0 0 10px 10px;

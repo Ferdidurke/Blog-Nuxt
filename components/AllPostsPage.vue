@@ -58,12 +58,14 @@ export default {
       },
       skip:0
     },
+    baseURL: process.env.baseUrl
 
 
   }),
   async mounted() {
-    this.posts = await this.$axios.$get('http://localhost:5000/api/blog/posts', { params: this.params }).then(res => res.posts)
-    this.counter = await this.$axios.$get('http://localhost:5000/api/blog/posts', { params: this.params }).then(res => res.counter)
+    console.log(this.baseURL)
+    this.posts = await this.$axios.$get(`${this.baseURL}/api/blog/posts`, { params: this.params }).then(res => res.posts)
+    this.counter = await this.$axios.$get(`${this.baseURL}/api/blog/posts`, { params: this.params }).then(res => res.counter)
   },
 
   computed: {

@@ -1,3 +1,4 @@
+
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -29,6 +30,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '@/plugins/vue-material-design-icons', mode: 'client' },
+    { src: '~/plugins/axios'}
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -47,14 +49,42 @@ export default {
       components: ['MdDrawer', 'MdRadio', 'MdMenu', 'MdContent', 'MdList', 'MdButton', 'MdToolbar',]
     }],
     'nuxt-material-design-icons',
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/auth'
   ],
+
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     loaders: {
       scss: {
         implementation: require('sass')
+      }
+    }
+  },
+
+  axios: {
+    baseUrl: process.env.BASE_URL || 'http://localhost:5000'
+  },
+
+  auth: {
+    redirect: {
+      logout: '/blog',
+      home: '/blog'
+    },
+    strategies: {
+      local: {
+        token: {
+          property: 'token',
+          global: true,
+          // required: true,
+          // type: 'Bearer'
+        },
+        endpoints: {
+          login: { url: '/api/auth/login', method: 'post' },
+          logout: false,
+          user: false
+        }
       }
     }
   }

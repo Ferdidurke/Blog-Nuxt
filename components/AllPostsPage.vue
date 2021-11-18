@@ -23,7 +23,11 @@
         <md-button class="md-raised" v-on:click="previousPage" :disabled="isDisabledPrevPage">
           <arrow-left mdi class="icon-button"/>
         </md-button>
-          <div class="page-counter-container"></div>
+          <div class="page-counter-container">
+            <div v-if="counter>0">
+              {{ currentPage }} / {{ lastPage }}
+            </div>
+          </div>
         <md-button class="md-raised" v-on:click="nextPage" :disabled="isDisabledNextPage">
           <arrow-right mdi class="icon-button"/>
         </md-button>
@@ -70,11 +74,18 @@ export default {
 
   computed: {
       isDisabledPrevPage() {
-        return this.params.skip < 5;
+        return this.params.skip < this.params.limit;
       },
       isDisabledNextPage() {
-        return this.params.skip >= 15;
+        return this.params.skip >= this.counter - this.params.limit;
+      },
+      currentPage () {
+        return Math.ceil(this.params.skip / 5 + 1)
+      },
+      lastPage () {
+        return Math.ceil(this.counter / this.params.limit)
       }
+
   },
 
   methods: {
@@ -83,6 +94,7 @@ export default {
       this.posts = await this.$axios.$get('http://localhost:5000/api/blog/posts', { params: this.params }).then(res => res.posts)
     },
     async sortByDateAsc () {
+      this.posts = await this.$blogApi.get
       this.params.sort = { date: 'asc' }
       this.posts = await this.$axios.$get('http://localhost:5000/api/blog/posts', { params: this.params }).then(res => res.posts)
 
@@ -145,7 +157,7 @@ export default {
 
 
   .page-counter-container {
-    background-color: gray;
+
     width: 40px;
   }
 

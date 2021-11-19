@@ -6,6 +6,7 @@ import ArrowLeft from 'vue-material-design-icons/ArrowLeft.vue'
 import ArrowRight from 'vue-material-design-icons/ArrowRight.vue'
 import Delete from 'vue-material-design-icons/Delete.vue'
 import ChevronDoubleDown from 'vue-material-design-icons/ChevronDoubleDown.vue'
+import PlusCircle from 'vue-material-design-icons/PlusCircle.vue'
 
 
 export default function materialIcons() {
@@ -15,5 +16,6 @@ export default function materialIcons() {
   Vue.component('ArrowRight', ArrowRight);
   Vue.component('Delete', Delete);
   Vue.component('ChevronDoubleDown', ChevronDoubleDown);
+  Vue.component('PlusCircle', PlusCircle);
 
 }

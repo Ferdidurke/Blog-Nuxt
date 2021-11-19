@@ -64,12 +64,12 @@ export default {
   },
 
   axios: {
-    baseUrl: process.env.BASE_URL || 'http://localhost:5000'
+    baseUrl: process.env.BASE_URL || 'http://localhost:5000',
   },
 
   auth: {
     redirect: {
-      logout: '/blog',
+      logout: '/login',
       home: '/blog'
     },
     strategies: {

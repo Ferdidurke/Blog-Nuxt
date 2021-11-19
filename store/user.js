@@ -1,29 +1,31 @@
-export const state = () => ({
-    user: {
-      userId: null,
-      isAuthenticated: false,
-      firstName: null,
-      lastName: null
-    },
+export const state = () => ( localStorage.VuexStorage ? JSON.parse(localStorage.getItem('VuexStorage')) : {
+                                                                                                    userId: null,
+                                                                                                    firstName: null,
+                                                                                                    lastName: null
+
 })
 
 export const mutations = {
       login(state, payload) {
         console.log(payload)
-        state.user.userId = payload.data.userId
-        state.user.firstName = payload.data.firstName
-        state.user.lastName = payload.data.lastName
+        state.userId = payload.data.userId
+        state.firstName = payload.data.firstName
+        state.lastName = payload.data.lastName
+        localStorage.setItem('VuexStorage', JSON.stringify({ userId: state.userId, firstName: state.firstName, lastName: state.lastName }))
       },
       logout(state) {
-        state.user.userId = null
-        state.user.firstName = null
-        state.user.lastName = null
+        state.userId = null
+        state.firstName = null
+        state.lastName = null
+        this.$auth.logout()
+        localStorage.removeItem('VuexStorage')
 
       },
 }
 
 export const getters = {
-    getUser: (state) => state.user.firstName
+    getUser: (state) => state
+
 }
 
 

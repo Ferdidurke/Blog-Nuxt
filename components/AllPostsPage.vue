@@ -3,7 +3,7 @@
     <div class="buttons-container">
       <div>
         Sort by author
-        <md-button class="md-raised" v-on:click="sortByAuthorDesc">
+        <md-button class="md-raised md-small" v-on:click="sortByAuthorDesc">
           <arrow-down mdi class="icon-button"/>
         </md-button>
         <md-button class="md-raised" v-on:click="sortByAuthorAsc">
@@ -24,7 +24,7 @@
           <arrow-left mdi class="icon-button"/>
         </md-button>
           <div class="page-counter-container">
-            <div v-if="counter>0">
+            <div v-if="getCounter>0">
               {{ currentPage }} / {{ lastPage }}
             </div>
           </div>
@@ -33,8 +33,14 @@
         </md-button>
       </div>
     </div>
+    <div class="new-post-button-container">
+      <md-button class="md-raised new-post-button" v-on:click="addNewPost">+</md-button>
+    </div>
+    <transition name="post-form-transition">
+       <NewPostForm v-if="isNewPost" v-bind:addNewPost="addNewPost"/>
+    </transition>
     <div class="posts-container">
-      <Post v-for="post in posts" :key="post._id" v-bind:post="post"/>
+      <Post v-for="post in getPost" :key="post._id" v-bind:post="post"/>
     </div>
   </div>
 </template>
@@ -44,6 +50,7 @@ import Vue from "vue";
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
+import {mapGetters} from 'vuex'
 
 
 Vue.use(VueMaterial)
@@ -53,67 +60,81 @@ Vue.use(VueMaterial)
 export default {
   name: "AllPostsPage",
   data: () => ({
-    posts: [],
-    counter: 0,
-    params: {
-      limit: 5,
-      sort: {
-        date: 'asc'
-      },
-      skip:0
-    },
-    baseURL: process.env.baseUrl
-
-
+    isNewPost: false
   }),
   async mounted() {
-    console.log(this.baseURL)
-    this.posts = await this.$axios.$get(`${this.baseURL}/api/blog/posts`, { params: this.params }).then(res => res.posts)
-    this.counter = await this.$axios.$get(`${this.baseURL}/api/blog/posts`, { params: this.params }).then(res => res.counter)
+    await this.$store.dispatch('blog/loadPosts')
+
   },
 
   computed: {
+      ...mapGetters('blog', ['getPosts']),
+      ...mapGetters('blog', ['getParams']),
+      ...mapGetters('user', ['getUser']),
+      getPost () {
+        return this.getPosts.posts
+      },
+      getCounter () {
+        return this.getPosts.counter
+      },
+      getQueryParams () {
+        return this.getParams
+      },
+
       isDisabledPrevPage() {
-        return this.params.skip < this.params.limit;
+        return this.getParams.skip < this.getParams.limit;
       },
       isDisabledNextPage() {
-        return this.params.skip >= this.counter - this.params.limit;
+        return this.getParams.skip >= this.getCounter - this.getParams.limit;
       },
       currentPage () {
-        return Math.ceil(this.params.skip / 5 + 1)
+        return Math.ceil(this.getParams.skip / 5 + 1)
       },
       lastPage () {
-        return Math.ceil(this.counter / this.params.limit)
+        return Math.ceil(this.getCounter / this.getParams.limit)
       }
 
   },
 
   methods: {
+    addNewPost () {
+      this.isNewPost = !this.isNewPost
+    },
     async sortByDateDesc () {
-      this.params.sort = { date: 'desc' }
-      this.posts = await this.$axios.$get('http://localhost:5000/api/blog/posts', { params: this.params }).then(res => res.posts)
+      const params = {...this.getQueryParams}
+      params.sort = { date: 'desc' }
+      this.$store.commit('blog/changeQueryParams', params)
+      await this.$store.dispatch('blog/loadPosts')
     },
     async sortByDateAsc () {
-      this.posts = await this.$blogApi.get
-      this.params.sort = { date: 'asc' }
-      this.posts = await this.$axios.$get('http://localhost:5000/api/blog/posts', { params: this.params }).then(res => res.posts)
-
+      const params = {...this.getQueryParams}
+      params.sort = { date: 'asc' }
+      this.$store.commit('blog/changeQueryParams', params)
+      await this.$store.dispatch('blog/loadPosts')
     },
     async sortByAuthorDesc () {
-      this.params.sort = { author: 'asc' }
-      this.posts = await this.$axios.$get('http://localhost:5000/api/blog/posts', { params: this.params }).then(res => res.posts)
+      const params = {...this.getQueryParams}
+      params.sort = { author: 'asc' }
+      this.$store.commit('blog/changeQueryParams', params)
+      await this.$store.dispatch('blog/loadPosts')
     },
     async sortByAuthorAsc () {
-      this.params.sort = { author: 'desc' }
-      this.posts = await this.$axios.$get('http://localhost:5000/api/blog/posts', { params: this.params }).then(res => res.posts)
+      const params = {...this.getQueryParams}
+      params.sort = { author: 'desc' }
+      this.$store.commit('blog/changeQueryParams', params)
+      await this.$store.dispatch('blog/loadPosts')
     },
     async previousPage () {
-      this.params.skip -= 5
-      this.posts = await this.$axios.$get('http://localhost:5000/api/blog/posts', { params: this.params }).then(res => res.posts)
+      const params = {...this.getQueryParams}
+      params.skip -= 5
+      this.$store.commit('blog/changeQueryParams', params)
+      await this.$store.dispatch('blog/loadPosts')
     },
     async nextPage () {
-      this.params.skip += 5
-      this.posts = await this.$axios.$get('http://localhost:5000/api/blog/posts', { params: this.params }).then(res => res.posts)
+      const params = {...this.getQueryParams}
+      params.skip += 5
+      this.$store.commit('blog/changeQueryParams', params)
+      await this.$store.dispatch('blog/loadPosts')
     }
   }
 }
@@ -128,14 +149,12 @@ export default {
 
 <style lang="scss" scoped>
   .all-posts-page {
-
+    padding-bottom: 40px;
   }
-
-
 
   .buttons-container {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     flex-wrap: wrap;
     gap: 3rem;
     background-color: darkgray;
@@ -149,16 +168,36 @@ export default {
     color: #eeeeee;
     font-size: 20px;
   }
+  .md-button {
+    min-width: 10%;
+  }
   .icon-button {
     font-size: 24px;
   }
-
-
-
+  .new-post-button-container {
+    display: flex;
+    justify-content: center;
+  }
+  .new-post-button {
+    min-width: 1%;
+    width: 80px;
+    height: 80px;
+    margin-top: 20px;
+    border-radius: 60px;
+    font-size: 40px;
+  }
 
   .page-counter-container {
-
     width: 40px;
+  }
+  .post-form-transition-enter-active,
+  .post-form-transition-leave-active {
+    transition: opacity 0.5s ease;
+  }
+
+  .post-form-transition-enter-from,
+  .post-form-transition-leave-to {
+    opacity: 0;
   }
 
 
@@ -166,6 +205,14 @@ export default {
   .posts-container {
     width: 80%;
     margin: 30px auto;
+  }
+
+  @media screen and (max-width: 768px){
+    .buttons-container {
+      justify-content: center;
+      gap:0;
+    }
+
   }
 
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <md-toolbar v-if="$auth.loggedIn" class="logged-toolbar">
-      <div>
+      <div class="user-info">
         {{ currentUser }}
       </div>
       <NuxtLink to="/login" v-on:click.native="logout">Logout</NuxtLink>
@@ -30,12 +30,11 @@ export default {
   computed: {
     ...mapGetters('user', ['getUser']),
     currentUser() {
-      return this.getUser
+      return `${this.getUser.firstName} ${this.getUser.lastName}`
     }
   },
   methods: {
     logout() {
-      this.$auth.logout()
       this.$store.commit('user/logout')
     }
   }
@@ -45,6 +44,7 @@ export default {
 <style lang="scss" scoped>
 
   .md-toolbar {
+      height: 50px;
       display: flex;
       justify-content: center;
       gap: 5rem;
@@ -62,6 +62,24 @@ export default {
   .logged-toolbar {
     justify-content: flex-end;
     padding-right: 40px;
+  }
+  .user-info {
+    height: inherit;
+    color: white;
+    font-size: 20px;
+    background: #eeeeee;
+
+  }
+  @media screen and (max-width: 768px) {
+    .md-toolbar {
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .logged-toolbar {
+      justify-content: center;
+      padding-right: 0;
+    }
+
   }
 
 

@@ -31,8 +31,7 @@
 </template>
 
 <script>
-import axios from "@/plugins/axios";
-import {redirect} from "@nuxtjs/auth/lib/module/defaults";
+
 
 export default {
   name: "RegisterForm",
@@ -50,7 +49,7 @@ export default {
         lastName: this.lastName,
         email: this.email,
         password: this.password
-      }).then(this.$router.replace({path: '/login'}))
+      }).then(this.$router.replace({ path: '/login' }))
       .catch(({ response }) => {
         this.error = response.data.message
       })

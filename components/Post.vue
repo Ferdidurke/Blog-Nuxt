@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <md-card md-with-hover>
+  <div class="post-container">
+
+      <md-card md-with-hover>
 
         <md-card-header>
           <div class="post-header-container">
@@ -11,7 +12,8 @@
               <md-button class="md-icon-button"
                          v-on:click="removePost"
                          v-show="$auth.loggedIn"
-                          :disabled="isDisabledDeletePost"><delete mdi class="post-icon"/></md-button>
+                          :disabled="isDisabledDeletePost"><delete mdi class="post-icon"
+                                                                   :class="{ 'disabled-icon':isDisabledDeletePost }"/></md-button>
             </div>
           </div>
           <div class="post-date-wrapper">
@@ -19,19 +21,22 @@
             <div class="md-subhead">{{ new Date(post.date).toLocaleString() }}</div>
           </div>
         </md-card-header>
-
-        <md-card-content>
+        <NuxtLink style="text-decoration: none;
+                          color: inherit;"
+                  :to="{ name: 'posts-id', params: { id: post._id }}">
+        <md-card-content :class="{ 'current-post-content':isCurrentPost }">
           {{ post.body }}
         </md-card-content>
-
+      </NuxtLink>
         <div class="accordion-opener" v-on:click="openCommentBlock">
             <chevron-double-down class="post-icon"/>
         </div>
-      <div class="comments-block" :class="{extended: isExtendedCommentsBlock}">
+      <div class="comments-block" :class="{ extended: isExtendedCommentsBlock }">
         <CommentsContainer v-if="isExtendedCommentsBlock"
                            v-bind:postId="post._id"/>
       </div>
     </md-card>
+
   </div>
 </template>
 
@@ -39,6 +44,7 @@
 import Vue from "vue";
 import VueMaterial from 'vue-material'
 import { mapGetters } from 'vuex'
+import blogApi from '~/services/BlogService'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 
@@ -56,7 +62,8 @@ export default {
       date: [String, Date] ,
       title: [String],
       body: [String],
-    }
+    },
+    isCurrentPost: Boolean,
 
   },
   data: () => ({
@@ -74,21 +81,12 @@ export default {
   },
 
   methods: {
-
     openCommentBlock () {
       this.isExtendedCommentsBlock = !this.isExtendedCommentsBlock
     },
     removePost() {
-      this.$axios.setHeader('Authorization', localStorage.getItem('auth._token.local'))
-      this.$axios.delete('/api/blog/posts/', { data: { _id: this.post._id }}).
-      catch(({ response }) => {
-        if (response.status === 401) {
-          this.$store.commit('user/logout')
-        }
-      })
-      this.$store.dispatch('blog/loadPosts')
+      blogApi.delete('/api/blog/posts/', { data: { _id: this.post._id }}).then(this.$store.dispatch('blog/loadPosts'))
     },
-
   }
 
 }
@@ -96,10 +94,12 @@ export default {
 </script>
 
 <style scoped>
-
-  .md-card {
+  .post-container {
     width: 80%;
     margin: 20px auto;
+    border-radius: 10px;
+  }
+  .md-card {
     border-radius: 10px;
   }
 
@@ -116,12 +116,25 @@ export default {
     width: 92%;
   }
 
+  .md-card-content {
+    max-height: 80px;
+    overflow-y: hidden;
+
+  }
+  .current-post-content {
+    max-height: min-content;
+  }
+
   .delete-button-container {
     width: 8%;
   }
 
   .post-icon {
     font-size: 24px;
+  }
+
+  .disabled-icon {
+    color: #eeeeee;
   }
 
   .md-icon-button {
@@ -134,7 +147,7 @@ export default {
     display: flex;
     justify-content: flex-end;
     padding: 10px;
-    border-top: 1px solid;
+    border-top: 1px darkgray solid;
     border-bottom: 3px #eeeeee solid;
     border-radius: 0 0 10px 10px;
     transition: 0.7s;
@@ -146,18 +159,15 @@ export default {
   }
 
   .comments-block {
-    height: 0;
-    transition: 0.4s;
-    overflow-y: auto;
+    max-height: 0;
+    transition: max-height 0.9s ease-out;
     display: flex;
-    flex-direction: column;
   }
 
   .extended {
-    height: 300px;
     max-height: 600px;
     padding: 10px;
-    transition: 0.5s;
+    transition: max-height 0.9s ease-out;
   }
 
   .new-icon {

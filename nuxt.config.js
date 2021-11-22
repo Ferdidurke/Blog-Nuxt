@@ -19,7 +19,11 @@ export default {
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+      { rel: 'preconnect', href: 'https://fonts.gstatic.com'},
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Comforter+Brush&display=swap'}
+
     ]
   },
 
@@ -70,7 +74,7 @@ export default {
   auth: {
     redirect: {
       logout: '/login',
-      home: '/blog'
+      home: '/'
     },
     strategies: {
       local: {

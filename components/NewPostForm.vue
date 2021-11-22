@@ -1,6 +1,6 @@
 <template>
-  <div class="new-post-form-container">
-    <form class="new-post-form" @submit.prevent="addPost">
+
+    <form class="new-post-form" :class="{ 'active': addNewPost }" @submit.prevent="addPost">
       <md-field>
         <label>Title</label>
         <md-input required
@@ -12,14 +12,18 @@
                   required
                   v-model="body"></md-textarea>
       </md-field>
-      <md-button class="md-raised" type="submit">Add</md-button>
+      <div class="post-form-button-container">
+        <md-button class="md-raised" type="submit">Add</md-button>
+      </div>
+      <p v-if="error"> {{ error }}</p>
     </form>
-  </div>
+
 </template>
 
 <script>
 
 import {mapGetters} from "vuex";
+import blogApi from "@/services/BlogService";
 
 export default {
   name: "NewPostForm",
@@ -39,8 +43,7 @@ export default {
   },
   methods: {
     addPost () {
-      this.$axios.setHeader('Authorization', localStorage.getItem('auth._token.local'))
-      this.$axios.post('/api/blog/posts', {
+      blogApi.post('/api/blog/posts', {
         userId: this.currentUser.userId,
         author: `${this.getUser.firstName} ${this.getUser.lastName}`,
         title: this.title,
@@ -48,9 +51,7 @@ export default {
       }).then(this.$store.dispatch('blog/loadPosts'))
         .then(this.addNewPost)
         .catch(({ response }) => {
-          if (response.status === 401) {
-            this.$store.commit('user/logout')
-          }
+          this.error = response.data.message
         })
     }
   },
@@ -58,13 +59,17 @@ export default {
 </script>
 
 <style scoped>
-.new-post-form-container {
-  margin: 6rem auto;
-  width: 50%;
-  background-color: darkgray;
-  border-radius: 10px;
-  padding: 20px;
-}
-
+  .new-post-form {
+    transition: 0.5s;
+    margin: 6rem auto;
+    width: 50%;
+    background-color: darkgray;
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .post-form-button-container {
+    display: flex;
+    justify-content: end;
+  }
 
 </style>

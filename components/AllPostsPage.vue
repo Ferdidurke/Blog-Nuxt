@@ -1,5 +1,6 @@
 <template>
   <div class="all-posts-page">
+    <Header/>
     <div class="buttons-container">
       <div>
         Sort by author
@@ -36,11 +37,13 @@
     <div class="new-post-button-container">
       <md-button class="md-raised new-post-button" v-on:click="addNewPost">+</md-button>
     </div>
-    <transition name="post-form-transition">
+    <div class="new-post-form-container" :class="{'active' : isNewPost}">
        <NewPostForm v-if="isNewPost" v-bind:addNewPost="addNewPost"/>
-    </transition>
+    </div>
     <div class="posts-container">
-      <Post v-for="post in getPost" :key="post._id" v-bind:post="post"/>
+      <Post v-for="post in getPost" :key="post._id"
+            v-bind:post="post"
+            v-bind:isCurrentPost="false"/>
     </div>
   </div>
 </template>
@@ -150,6 +153,8 @@ export default {
 <style lang="scss" scoped>
   .all-posts-page {
     padding-bottom: 40px;
+    background: #eeeeee;
+    min-height: 100vh;
   }
 
   .buttons-container {
@@ -158,7 +163,7 @@ export default {
     flex-wrap: wrap;
     gap: 3rem;
     background-color: darkgray;
-    margin-top: 150px;
+    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 30%), 0 4px 5px 0 rgb(0 0 0 / 34%), 0 1px 10px 0 rgb(0 0 0 / 32%);
 
   }
   .buttons-container > div {
@@ -174,6 +179,7 @@ export default {
   .icon-button {
     font-size: 24px;
   }
+
   .new-post-button-container {
     display: flex;
     justify-content: center;
@@ -188,18 +194,8 @@ export default {
   }
 
   .page-counter-container {
-    width: 40px;
+    width: 45px;
   }
-  .post-form-transition-enter-active,
-  .post-form-transition-leave-active {
-    transition: opacity 0.5s ease;
-  }
-
-  .post-form-transition-enter-from,
-  .post-form-transition-leave-to {
-    opacity: 0;
-  }
-
 
 
   .posts-container {

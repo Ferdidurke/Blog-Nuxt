@@ -16,16 +16,13 @@
         {{ comment.body }}
       </md-card-content>
 
-      <md-card-actions>
-
-      </md-card-actions>
-
     </md-card>
   </div>
 </template>
 
 <script>
 import {mapGetters} from "vuex";
+import blogApi from "@/services/BlogService";
 
 export default {
   name: "Comment",
@@ -48,15 +45,7 @@ export default {
   },
   methods: {
     removeComment() {
-      this.$axios.setHeader('Authorization', localStorage.getItem('auth._token.local'))
-      this.$axios.delete('/api/blog/comments', { data: { _id: this.comment._id }})
-        .catch(({ response }) => {
-        if (response.status === 401) {
-          this.$store.commit('user/logout')
-        }
-      })
-      this.getComments()
-
+      blogApi.delete('/api/blog/comments', { data: { _id: this.comment._id }}).then(this.getComments())
     },
 
   }

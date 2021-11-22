@@ -1,9 +1,13 @@
 <template>
   <div class="container">
       <div class="comments-container">
-        <Comment v-for="comment in comments" :key="comment._id" v-bind:comment="comment" v-bind:getComments="getComments"/>
+        <Comment v-for="comment in comments"
+                 :key="comment._id"
+                 v-bind:comment="comment"
+                 v-bind:getComments="getComments"/>
       </div>
-      <div class="new-comment-form" v-if="isAddNewComment">
+      <div class="new-comment-form"
+           v-if="isAddNewComment">
         <textarea class="comment-text"
                   v-model="newComment.body"
                   autofocus></textarea>
@@ -12,7 +16,9 @@
         </div>
       </div>
       <div class="button-container">
-        <md-button v-if="!isAddNewComment" v-on:click="setNewComment" v-show="$auth.loggedIn">Add comment</md-button>
+        <md-button v-if="!isAddNewComment"
+                   v-on:click="setNewComment"
+                   v-show="$auth.loggedIn">Add comment</md-button>
       </div>
   </div>
 
@@ -20,6 +26,7 @@
 
 <script>
 import {mapGetters} from "vuex";
+import blogApi from "@/services/BlogService";
 
 
 export default {
@@ -52,24 +59,18 @@ export default {
       this.isAddNewComment = true
     },
     async getComments () {
-      this.comments = await this.$axios.$get(`http://localhost:5000/api/blog/comments/${this.postId}`)
+      this.comments = await this.$axios.$get(`/api/blog/comments/${this.postId}`)
     },
     async sendComment () {
-
-      this.$axios.setHeader('Authorization', localStorage.getItem('auth._token.local'))
-      await this.$axios.$post(`/api/blog/comments/`, {
+      await blogApi.post(`/api/blog/comments/`, {
         userId: this.currentUserId,
         postId: this.postId,
         author: this.currentAuthor,
         body: this.newComment.body
-      }).catch(({ response }) => {
-        if (response.status === 401) {
-          this.$store.commit('user/logout')
-        }
       })
       this.newComment.body = ''
       this.isAddNewComment = false
-      this.comments = await this.$axios.$get(`http://localhost:5000/api/blog/comments/${this.postId}`)
+      this.comments = await this.$axios.$get(`/api/blog/comments/${this.postId}`)
     },
 
   }
@@ -81,11 +82,14 @@ export default {
   .container {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    width: 100%;
   }
   .button-container {
     display: flex;
     justify-content: end;
+  }
+  .comments-container {
+    overflow-y: auto;
   }
 
   .comment-text {

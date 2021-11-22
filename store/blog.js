@@ -5,7 +5,7 @@ export const state = () => ({
   queryParams: {
     limit: 5,
     sort: {
-      date: 'asc'
+      date: 'desc'
     },
     skip: 0
   }

@@ -24,7 +24,7 @@
                   required
                   v-model="password"></md-input>
       </md-field>
-      <p v-if="error" class="error-text"> {{ error }} </p>
+      <Error v-if="error" v-bind:error="error"/>
       <md-button class="md-raised" type="submit">Register</md-button>
     </form>
   </div>
@@ -44,21 +44,23 @@ export default {
   }),
   methods: {
     async registerUser () {
-      await this.$axios.post('/api/auth/register', {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        password: this.password
-      }).then(this.$router.replace({ path: '/login' }))
-      .catch(({ response }) => {
-        this.error = response.data.message
-      })
+      try {
+        await this.$axios.post('/api/auth/register', {
+          firstName: this.firstName,
+          lastName: this.lastName,
+          email: this.email,
+          password: this.password
+        })
+        await this.$router.replace({path: '/login'})
+      } catch (error) {
+       this.error = error
+      }
     }
   },
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .register-form-container {
     margin: 6rem auto;
     width: 30%;

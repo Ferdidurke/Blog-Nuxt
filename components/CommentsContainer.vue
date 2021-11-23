@@ -20,13 +20,13 @@
                    v-on:click="setNewComment"
                    v-show="$auth.loggedIn">Add comment</md-button>
       </div>
+      <Error v-if="error" v-bind:error="error"/>
   </div>
 
 </template>
 
 <script>
 import {mapGetters} from "vuex";
-import blogApi from "@/services/BlogService";
 
 
 export default {
@@ -39,7 +39,8 @@ export default {
     isAddNewComment: false,
     newComment: {
       body: ''
-    }
+    },
+    error: undefined
   }),
   async mounted() {
     await this.getComments()
@@ -59,25 +60,35 @@ export default {
       this.isAddNewComment = true
     },
     async getComments () {
-      this.comments = await this.$axios.$get(`/api/blog/comments/${this.postId}`)
+      try {
+        this.comments = await this.$axios.$get(`/api/blog/comments/${this.postId}`)
+      } catch (error) {
+        this.error = error
+      }
+
     },
     async sendComment () {
-      await blogApi.post(`/api/blog/comments/`, {
-        userId: this.currentUserId,
-        postId: this.postId,
-        author: this.currentAuthor,
-        body: this.newComment.body
-      })
-      this.newComment.body = ''
-      this.isAddNewComment = false
-      this.comments = await this.$axios.$get(`/api/blog/comments/${this.postId}`)
+      try {
+        await this.$blogApi.post(`/api/blog/comments/`, {
+          userId: this.currentUserId,
+          postId: this.postId,
+          author: this.currentAuthor,
+          body: this.newComment.body
+        })
+        this.newComment.body = ''
+        this.isAddNewComment = false
+        this.comments = await this.$axios.$get(`/api/blog/comments/${this.postId}`)
+      } catch (error) {
+        this.error = error
+      }
+
     },
 
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 
   .container {
     display: flex;
@@ -86,7 +97,7 @@ export default {
   }
   .button-container {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
   }
   .comments-container {
     overflow-y: auto;
@@ -101,4 +112,5 @@ export default {
     resize: none;
     border: darkgray 2px solid;
   }
+
 </style>

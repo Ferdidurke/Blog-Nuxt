@@ -15,15 +15,15 @@
       <div class="post-form-button-container">
         <md-button class="md-raised" type="submit">Add</md-button>
       </div>
-      <p v-if="error"> {{ error }}</p>
+      <Error v-if="error" v-bind:error="error"/>
     </form>
 
 </template>
 
 <script>
 
-import {mapGetters} from "vuex";
-import blogApi from "@/services/BlogService";
+import { mapGetters } from "vuex";
+
 
 export default {
   name: "NewPostForm",
@@ -42,17 +42,19 @@ export default {
     }
   },
   methods: {
-    addPost () {
-      blogApi.post('/api/blog/posts', {
-        userId: this.currentUser.userId,
-        author: `${this.getUser.firstName} ${this.getUser.lastName}`,
-        title: this.title,
-        body: this.body,
-      }).then(this.$store.dispatch('blog/loadPosts'))
-        .then(this.addNewPost)
-        .catch(({ response }) => {
-          this.error = response.data.message
-        })
+    async addPost () {
+      try {
+            await this.$blogApi.post('/api/blog/posts', {
+              userId: this.currentUser.userId,
+              author: `${this.getUser.firstName} ${this.getUser.lastName}`,
+              title: this.title,
+              body: this.body,
+            })
+            await this.$store.dispatch('blog/loadPosts')
+            this.addNewPost()
+          } catch (error) {
+              this.error = error
+          }
     }
   },
 }
@@ -69,7 +71,7 @@ export default {
   }
   .post-form-button-container {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
   }
 
 </style>

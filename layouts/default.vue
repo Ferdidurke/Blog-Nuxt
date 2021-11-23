@@ -1,9 +1,8 @@
 <template>
   <div>
     <md-toolbar v-if="$auth.loggedIn" class="authorized-toolbar">
-      <div class="user-info">
-        {{ currentUser }}
-      </div>
+      <UserCard v-show="isGotUserInfo"
+                v-bind:showUserCard="showUserCard"/>
       <NuxtLink to="/login" v-on:click.native="logout">Logout</NuxtLink>
     </md-toolbar>
     <md-toolbar v-else>
@@ -16,26 +15,23 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { MdButton, MdContent, MdTabs } from 'vue-material/dist/components'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
-import { mapGetters } from 'vuex'
 
-Vue.use(MdButton)
-Vue.use(MdContent)
-Vue.use(MdTabs)
 export default {
   name: "layout",
+  data: () => ({
+    isGotUserInfo: false
+  }),
   computed: {
-    ...mapGetters('user', ['getUser']),
-    currentUser() {
-      return `${this.getUser.firstName} ${this.getUser.lastName}`
-    }
+
   },
   methods: {
     logout() {
       this.$store.commit('user/logout')
+    },
+    showUserCard () {
+      this.isGotUserInfo = true
     }
   }
 }
@@ -62,20 +58,7 @@ export default {
     justify-content: flex-end;
     padding-right: 40px;
   }
-  .user-info {
-    height: inherit;
-    width: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: darkgray;
-    background: white;
-    font-size: 20px;
-    -webkit-clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%);
-    -moz-clip-path: polygon(20% 0%, 100% 0%, 80% 100%, 0% 100%);
-    clip-path: polygon(20% 0%, 100% 0%, 80% 100%, 0% 100%);
 
-  }
   @media screen and (max-width: 768px) {
     .md-toolbar {
       flex-wrap: wrap;

@@ -25,9 +25,6 @@ export const mutations = {
   giveError (state, payload) {
     state.error = payload
   },
-  deletePost(state, payload) {
-
-  },
 
 }
 
@@ -38,7 +35,6 @@ export const actions = {
     this.$axios.$get(`/api/blog/posts`, { params: getParams })
       .then(response => commit('fetchPosts', response))
       .catch(({ response }) => {
-        console.log(response)
         const error = response.data.message;
         commit('giveError', { error })
       })

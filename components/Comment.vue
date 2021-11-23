@@ -17,12 +17,12 @@
       </md-card-content>
 
     </md-card>
+    <Error v-if="error" v-bind:error="error"/>
   </div>
 </template>
 
 <script>
 import {mapGetters} from "vuex";
-import blogApi from "@/services/BlogService";
 
 export default {
   name: "Comment",
@@ -37,6 +37,9 @@ export default {
     },
     getComments: Function
   },
+  data: () => ({
+    error: undefined
+  }),
   computed: {
     ...mapGetters('user', ['getUser']),
     isDisabled() {
@@ -44,15 +47,25 @@ export default {
     }
   },
   methods: {
-    removeComment() {
-      blogApi.delete('/api/blog/comments', { data: { _id: this.comment._id }}).then(this.getComments())
+    async removeComment() {
+      try {
+        await this.$blogApi.delete('/api/blog/comments', { data: { _id: this.comment._id }}).then(response => response.status)
+        .then(status => {
+          if (status === 200) {
+            this.getComments()
+          }
+        })
+        }
+        catch (error) {
+          this.error = error
+        }
     },
 
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .md-card {
     width: 90%;
     margin: 10px auto;
@@ -66,7 +79,7 @@ export default {
   }
   .delete-button-container {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
   }
   .md-icon-button {
     height: 40px;

@@ -2,7 +2,6 @@
   <div class="post-container">
 
       <md-card md-with-hover>
-
         <md-card-header>
           <div class="post-header-container">
             <div class="md-title">
@@ -36,7 +35,7 @@
                            v-bind:postId="post._id"/>
       </div>
     </md-card>
-
+    <Error v-if="error" v-bind:error="error"/>
   </div>
 </template>
 
@@ -44,7 +43,6 @@
 import Vue from "vue";
 import VueMaterial from 'vue-material'
 import { mapGetters } from 'vuex'
-import blogApi from '~/services/BlogService'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 
@@ -64,10 +62,12 @@ export default {
       body: [String],
     },
     isCurrentPost: Boolean,
+    redirectOnDelete: Function,
 
   },
   data: () => ({
     isExtendedCommentsBlock: false,
+    error: undefined
   }),
 
   mounted() {
@@ -84,8 +84,16 @@ export default {
     openCommentBlock () {
       this.isExtendedCommentsBlock = !this.isExtendedCommentsBlock
     },
-    removePost() {
-      blogApi.delete('/api/blog/posts/', { data: { _id: this.post._id }}).then(this.$store.dispatch('blog/loadPosts'))
+    async removePost() {
+      try {
+        this.$blogApi.delete('/api/blog/posts/', { data: { _id: this.post._id }}).then(this.$store.dispatch('blog/loadPosts'))
+        if (this.isCurrentPost) {
+          this.redirectOnDelete()
+        }
+      } catch (error) {
+        this.error = error
+      }
+
     },
   }
 
@@ -93,7 +101,7 @@ export default {
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .post-container {
     width: 80%;
     margin: 20px auto;
@@ -101,6 +109,15 @@ export default {
   }
   .md-card {
     border-radius: 10px;
+    cursor: default;
+  }
+  .md-card-content {
+    transition: 0.7s;
+  }
+
+  .md-card-content:hover {
+    transition: 0.7s;
+    background: #eeeeee;
   }
 
   .post-header-container {
@@ -151,6 +168,7 @@ export default {
     border-bottom: 3px #eeeeee solid;
     border-radius: 0 0 10px 10px;
     transition: 0.7s;
+    cursor: pointer;
   }
   .accordion-opener:hover {
     transition: 0.7s;
@@ -176,7 +194,19 @@ export default {
 
   @media screen and (max-width: 768px) {
     .delete-button-container {
+      width: 12%;
+    }
+    .md-title {
+      width: 88%;
+    }
+
+  }
+  @media screen and (max-width: 320px) {
+    .delete-button-container {
       width: 20%;
+    }
+    .md-title {
+      width: 80%;
     }
 
   }

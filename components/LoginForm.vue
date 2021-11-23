@@ -9,9 +9,9 @@
         <label>Password</label>
         <md-input type="password" required v-model="password"></md-input>
       </md-field>
-      <p v-if="error" class="error-text"> {{ error }}! Try again! </p>
       <md-button class="md-raised" type="submit">Login</md-button>
     </form>
+    <Error v-if="error" v-bind:error="error"/>
   </div>
 </template>
 
@@ -49,7 +49,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .login-form-container {
     margin: 6rem auto;
     width: 30%;

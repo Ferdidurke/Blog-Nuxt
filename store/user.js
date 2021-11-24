@@ -1,7 +1,7 @@
 export const state = () => ({
                              userId: null,
-                             firstName: '',
-                             lastName: '',
+                             firstName: null,
+                             lastName: null,
                              email: null,
                              token: null,
 })

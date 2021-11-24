@@ -1,4 +1,3 @@
-
 export default function ({ $axios, app }, inject) {
   $axios.onRequest(config => {
     console.log('Making request to ' + config.url)

@@ -17,7 +17,8 @@
       </md-card-content>
 
     </md-card>
-    <Error v-if="error" v-bind:error="error"/>
+    <Error v-if="error"
+           v-bind:error="error"/>
   </div>
 </template>
 

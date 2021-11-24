@@ -10,8 +10,7 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate",
-    "test": "jest"
+    "generate": "nuxt generate"
   },
   "dependencies": {
     "@nuxtjs/auth": "^4.9.1",
@@ -38,7 +37,6 @@
     "jest": "^27.0.5",
     "ts-jest": "^27.0.3",
     "vue-jest": "^3.0.4",
-    "vue-material-design-icons": "^4.13.0",
     "vue-material-types": "^1.0.0"
   }
 }

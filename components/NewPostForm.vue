@@ -1,6 +1,6 @@
 <template>
 
-    <form class="new-post-form" :class="{ 'active': addNewPost }" @submit.prevent="addPost">
+    <form class="new-post-form" @submit.prevent="addPost">
       <md-field>
         <label>Title</label>
         <md-input required
@@ -28,7 +28,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "NewPostForm",
   props: {
-    addNewPost: Function,
+    hidePostForm: Function,
   },
   data: () => ({
     title: '',
@@ -46,12 +46,12 @@ export default {
       try {
             await this.$blogApi.post('/api/blog/posts', {
               userId: this.currentUser.userId,
-              author: `${this.getUser.firstName} ${this.getUser.lastName}`,
+              author: `${ this.getUser.firstName } ${ this.getUser.lastName }`,
               title: this.title,
               body: this.body,
             })
             await this.$store.dispatch('blog/loadPosts')
-            this.addNewPost()
+            this.hidePostForm()
           } catch (error) {
               this.error = error
           }

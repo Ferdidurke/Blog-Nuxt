@@ -1,11 +1,10 @@
 <template>
-  <div class="user-info">
-    {{ currentUser }}
+  <div class="user-info" v-if="isGotUserInfo">
+    <p class="user-text">{{ currentUser }}</p>
   </div>
 </template>
 
 <script>
-import blogApi from "@/services/BlogService";
 import { mapGetters } from "vuex";
 
 export default {
@@ -14,16 +13,19 @@ export default {
     showUserCard: Function
   },
   async mounted() {
-    this.$blogApi.get('/api/auth/me')
+    await this.$blogApi.get('/api/auth/me')
       .then(result => result.data)
       .then(data => { this.$store.commit('user/authorized', { data } )})
-      .then(this.showUserCard())
+
 
   },
   computed: {
     ...mapGetters('user', ['getUser']),
     currentUser() {
       return `${this.getUser.firstName} ${this.getUser.lastName}`
+    },
+    isGotUserInfo () {
+      return (this.currentUser !== 'null null' && this.currentUser !== 'undefined undefined')
     }
   },
 }
@@ -39,9 +41,18 @@ export default {
     color: darkgray;
     background: white;
     font-size: 20px;
-    -webkit-clip-path: polygon(20px 0%, 100% 0%, 100% 100%, 0% 100%);
-    -moz-clip-path: polygon(20px 0%, 100% 0%, 80% 100%, 0% 100%);
-    clip-path: polygon(20px 0%, 100% 0%, 490px 100%, 0% 100%);
-
+    transform: skew(340deg);
   }
+  .user-text {
+    transform: skew(20deg);
+  }
+  @media screen and (max-width: 768px) {
+    .user-info {
+      display: none;
+    }
+  }
+
+
+
+
 </style>

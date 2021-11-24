@@ -16,7 +16,8 @@ export default {
     background: darkgray;
     text-align: center;
   }
-  h1 {
+
+  .header > h1 {
     margin-top: 0;
     margin-bottom: 0;
     padding: 20px;
@@ -26,11 +27,11 @@ export default {
     font-size: 8vw;
     line-height: normal;
   }
+
   @media screen and (max-width: 768px) {
-    h1 {
+    .header > h1 {
       font-size: 13vw;
     }
-
 
   }
 

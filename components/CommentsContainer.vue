@@ -20,7 +20,8 @@
                    v-on:click="setNewComment"
                    v-show="$auth.loggedIn">Add comment</md-button>
       </div>
-      <Error v-if="error" v-bind:error="error"/>
+      <Error v-if="error"
+             v-bind:error="error"/>
   </div>
 
 </template>
@@ -51,7 +52,7 @@ export default {
       return this.getUser.userId
     },
     currentAuthor() {
-      return `${this.getUser.firstName} ${this.getUser.lastName}`
+      return `${ this.getUser.firstName } ${ this.getUser.lastName }`
     },
 
   },
@@ -61,7 +62,7 @@ export default {
     },
     async getComments () {
       try {
-        this.comments = await this.$axios.$get(`/api/blog/comments/${this.postId}`)
+        this.comments = await this.$axios.$get(`/api/blog/comments/${ this.postId }`)
       } catch (error) {
         this.error = error
       }
@@ -77,7 +78,7 @@ export default {
         })
         this.newComment.body = ''
         this.isAddNewComment = false
-        this.comments = await this.$axios.$get(`/api/blog/comments/${this.postId}`)
+        this.comments = await this.$axios.$get(`/api/blog/comments/${ this.postId }`)
       } catch (error) {
         this.error = error
       }

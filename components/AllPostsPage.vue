@@ -35,10 +35,10 @@
       </div>
     </div>
     <div class="new-post-button-container">
-      <md-button class="md-raised new-post-button" v-on:click="addNewPost">+</md-button>
+      <md-button class="md-raised new-post-button" v-on:click="showPostForm">+</md-button>
     </div>
-    <div class="new-post-form-container" :class="{'active' : isNewPost}">
-       <NewPostForm v-if="isNewPost" v-bind:addNewPost="addNewPost"/>
+    <div class="new-post-form-container" :class="{ 'active' : isNewPost }">
+       <NewPostForm v-if="isNewPost" v-bind:hidePostForm="showPostForm"/>
     </div>
     <div class="posts-container">
       <Post v-for="post in getPost" :key="post._id"
@@ -100,41 +100,41 @@ export default {
   },
 
   methods: {
-    addNewPost () {
+    showPostForm () {
       this.isNewPost = !this.isNewPost
     },
     async sortByDateDesc () {
-      const params = {...this.getQueryParams}
+      const params = { ...this.getQueryParams }
       params.sort = { date: 'desc' }
       this.$store.commit('blog/changeQueryParams', params)
       await this.$store.dispatch('blog/loadPosts')
     },
     async sortByDateAsc () {
-      const params = {...this.getQueryParams}
+      const params = { ...this.getQueryParams }
       params.sort = { date: 'asc' }
       this.$store.commit('blog/changeQueryParams', params)
       await this.$store.dispatch('blog/loadPosts')
     },
     async sortByAuthorDesc () {
-      const params = {...this.getQueryParams}
+      const params = { ...this.getQueryParams }
       params.sort = { author: 'asc' }
       this.$store.commit('blog/changeQueryParams', params)
       await this.$store.dispatch('blog/loadPosts')
     },
     async sortByAuthorAsc () {
-      const params = {...this.getQueryParams}
+      const params = { ...this.getQueryParams }
       params.sort = { author: 'desc' }
       this.$store.commit('blog/changeQueryParams', params)
       await this.$store.dispatch('blog/loadPosts')
     },
     async previousPage () {
-      const params = {...this.getQueryParams}
+      const params = { ...this.getQueryParams }
       params.skip -= 5
       this.$store.commit('blog/changeQueryParams', params)
       await this.$store.dispatch('blog/loadPosts')
     },
     async nextPage () {
-      const params = {...this.getQueryParams}
+      const params = { ...this.getQueryParams }
       params.skip += 5
       this.$store.commit('blog/changeQueryParams', params)
       await this.$store.dispatch('blog/loadPosts')

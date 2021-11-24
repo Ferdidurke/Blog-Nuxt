@@ -1,8 +1,7 @@
 <template>
   <div>
     <md-toolbar v-if="$auth.loggedIn" class="authorized-toolbar">
-      <UserCard v-show="isGotUserInfo"
-                v-bind:showUserCard="showUserCard"/>
+      <UserCard/>
       <NuxtLink to="/login" v-on:click.native="logout">Logout</NuxtLink>
     </md-toolbar>
     <md-toolbar v-else>
@@ -20,9 +19,7 @@ import 'vue-material/dist/theme/default.css'
 
 export default {
   name: "layout",
-  data: () => ({
-    isGotUserInfo: false
-  }),
+
   computed: {
 
   },
@@ -30,9 +27,6 @@ export default {
     logout() {
       this.$store.commit('user/logout')
     },
-    showUserCard () {
-      this.isGotUserInfo = true
-    }
   }
 }
 </script>

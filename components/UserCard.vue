@@ -22,7 +22,7 @@ export default {
   computed: {
     ...mapGetters('user', ['getUser']),
     currentUser() {
-      return `${this.getUser.firstName} ${this.getUser.lastName}`
+      return `${ this.getUser.firstName } ${ this.getUser.lastName }`
     },
     isGotUserInfo () {
       return (this.currentUser !== 'null null' && this.currentUser !== 'undefined undefined')
@@ -43,16 +43,15 @@ export default {
     font-size: 20px;
     transform: skew(340deg);
   }
+
   .user-text {
     transform: skew(20deg);
   }
+
   @media screen and (max-width: 768px) {
     .user-info {
       display: none;
     }
   }
-
-
-
 
 </style>

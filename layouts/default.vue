@@ -19,10 +19,6 @@ import 'vue-material/dist/theme/default.css'
 
 export default {
   name: "layout",
-
-  computed: {
-
-  },
   methods: {
     logout() {
       this.$store.commit('user/logout')
@@ -64,7 +60,5 @@ export default {
     }
 
   }
-
-
 
 </style>

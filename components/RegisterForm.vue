@@ -51,7 +51,7 @@ export default {
           email: this.email,
           password: this.password
         })
-        await this.$router.replace({path: '/login'})
+        await this.$router.replace({ path: '/login' })
       } catch (error) {
        this.error = error
       }
@@ -68,14 +68,17 @@ export default {
     border-radius: 10px;
     padding: 20px;
   }
+
   .md-button {
     display: block;
     margin: 0 auto;
   }
+
   .register-form > p {
     text-align: center;
     font-size: 20px;
   }
+
   .error-text {
     color: red;
   }

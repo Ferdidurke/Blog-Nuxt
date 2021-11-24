@@ -107,10 +107,12 @@ export default {
     margin: 20px auto;
     border-radius: 10px;
   }
+
   .md-card {
     border-radius: 10px;
     cursor: default;
   }
+
   .md-card-content {
     transition: 0.7s;
   }
@@ -138,6 +140,7 @@ export default {
     overflow-y: hidden;
 
   }
+
   .current-post-content {
     max-height: min-content;
   }
@@ -170,6 +173,7 @@ export default {
     transition: 0.7s;
     cursor: pointer;
   }
+
   .accordion-opener:hover {
     transition: 0.7s;
     background: #eeeeee;
@@ -196,15 +200,18 @@ export default {
     .delete-button-container {
       width: 12%;
     }
+
     .md-title {
       width: 88%;
     }
 
   }
+
   @media screen and (max-width: 320px) {
     .delete-button-container {
       width: 20%;
     }
+
     .md-title {
       width: 80%;
     }
